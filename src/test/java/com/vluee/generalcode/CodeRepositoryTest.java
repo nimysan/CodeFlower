@@ -55,4 +55,10 @@ class CodeRepositoryTest {
 		assertEquals("Undefined Code", repository.getLocaleMessage(code.get(), "en_US"));
 	}
 
+	@Test
+	void verifyCodeWithoutMessageSetup_enUS() {
+		Optional<CodeMetadata> code = repository.getCode("SA1000");
+		assertEquals(code.get().getSimpleName(), repository.getLocaleMessage(code.get(), "en_US"));
+	}
+
 }

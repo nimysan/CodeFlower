@@ -21,10 +21,6 @@ public class CodeMetadata {
 		return simpleName;
 	}
 
-	public void setSimpleName(String simpleName) {
-		this.simpleName = simpleName;
-	}
-
 	@Override
 	public String toString() {
 		return String.format("CodeMetadata [code=%s, simpleName=%s]", code, simpleName);

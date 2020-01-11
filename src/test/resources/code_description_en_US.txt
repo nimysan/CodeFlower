@@ -1,8 +1,7 @@
-0000=成功
-9999=未知错误
+0000=Successfully
+9999=Unkown Error
 11111=Undefined Code
-1000=调用参数不正确
-2000=业务逻辑执行出错
-3000=外部系统调用错误
-4000=数据持久化错误
-5000=服务上游调用错误，请检查服务设置或上游系统
+2000=System business got error
+3000=External system failed
+4000=Persistence data failed
+5000=Upstream service error. Please check the api setting.
