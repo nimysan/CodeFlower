@@ -1,9 +1,9 @@
 {
-	"0000":"successful",
-	"9999":"unknown error",
-	"11111" : "undefined error code",
-	"1000":"invalid input",
-	"2000":"invalid logic",
-	"3000":"external system error",
-	"4000":"persistence error"
+	"0000": "successful",
+	"9999": "unknown error",
+	"11111": "undefined error code",
+	"1000": "invalid input",
+	"2000": "invalid logic",
+	"3000": "external system error",
+	"4000": "persistence error"
 }
