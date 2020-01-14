@@ -12,10 +12,6 @@ import java.util.Optional;
  */
 public interface CodeRepository {
 
-	public static final String DEFAULT_PREFIX = "SA";
-	public static final String UNDEFINED_CODE_REPLACEMENT = "11111";
-
-	public static final Charset UTF8 = Charset.forName("utf8");
 
 	public Optional<CodeMetadata> getCode(String string);
 

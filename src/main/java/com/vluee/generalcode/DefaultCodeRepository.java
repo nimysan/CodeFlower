@@ -1,5 +1,8 @@
 package com.vluee.generalcode;
 
+import static com.vluee.generalcode.GeneralCodeConstants.DEFAULT_PREFIX;
+import static com.vluee.generalcode.GeneralCodeConstants.UNDEFINED_CODE_REPLACEMENT;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -37,15 +40,15 @@ public class DefaultCodeRepository implements CodeRepository {
 
 	public DefaultCodeRepository() {
 		log.info("Start initialize code reposiroty");
-		this.prefix = CodeRepository.DEFAULT_PREFIX;
+		this.prefix = DEFAULT_PREFIX;
 		try {
 			InputStream codeInputStream = DefaultCodeRepository.class.getClassLoader()
 					.getResourceAsStream("vluee_code_default.json");
 			Validate.notNull(codeInputStream,
 					"Code metadata initialize failed. Can't find file: vluee_code_default.json files under classpath.");
 			@SuppressWarnings("unchecked")
-			Map<String, String> codeList = JSON.parseObject(String.join("", IOUtils.readLines(codeInputStream, UTF8)),
-					Map.class);
+			Map<String, String> codeList = JSON.parseObject(
+					String.join("", IOUtils.readLines(codeInputStream, GeneralCodeConstants.UTF8)), Map.class);
 			Arrays.asList(Locale.getAvailableLocales()).stream().forEach(locale -> {
 				try {
 					String currentLocaleName = locale.toString();
@@ -53,7 +56,7 @@ public class DefaultCodeRepository implements CodeRepository {
 						InputStream resourceAsStream = DefaultCodeRepository.class.getClassLoader()
 								.getResourceAsStream("code_description_" + currentLocaleName + ".txt");
 						if (resourceAsStream != null) {
-							IOUtils.readLines(resourceAsStream, UTF8).forEach(t -> {
+							IOUtils.readLines(resourceAsStream, GeneralCodeConstants.UTF8).forEach(t -> {
 								String[] segments = t.split("=");
 								if (segments.length == 2) {
 									localeBasedMessages.put(this.prefix + segments[0], currentLocaleName, segments[1]);
