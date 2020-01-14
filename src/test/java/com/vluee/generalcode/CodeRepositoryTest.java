@@ -5,12 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("返回码仓库默认行为测试")
+@DisplayName("Test for Code Repository default behaivor")
 class CodeRepositoryTest {
 
 	private CodeRepository repository = new DefaultCodeRepository();
@@ -45,20 +46,21 @@ class CodeRepositoryTest {
 
 	@Test
 	void verifyCodeMessageZHCN() {
+		Locale locale = Locale.ENGLISH;
 		Optional<CodeMetadata> code = repository.getCode("NOT_EXIST");
-		assertEquals("未定义的错误码", repository.getLocaleMessage(code.get(), "zh_CN"));
+		assertEquals("未定义的错误码", repository.getLocaleMessage(code.get(), locale));
 	}
 
 	@Test
 	void verifyCodeMessage_enUS() {
 		Optional<CodeMetadata> code = repository.getCode("NOT_EXIST");
-		assertEquals("Undefined Code", repository.getLocaleMessage(code.get(), "en_US"));
+		assertEquals("Undefined Code", repository.getLocaleMessage(code.get(), Locale.ENGLISH));
 	}
 
 	@Test
 	void verifyCodeWithoutMessageSetup_enUS() {
 		Optional<CodeMetadata> code = repository.getCode("SA1000");
-		assertEquals(code.get().getSimpleName(), repository.getLocaleMessage(code.get(), "en_US"));
+		assertEquals(code.get().getSimpleName(), repository.getLocaleMessage(code.get(), Locale.ENGLISH));
 	}
 
 }

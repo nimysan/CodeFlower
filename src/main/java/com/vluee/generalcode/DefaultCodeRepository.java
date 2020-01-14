@@ -14,8 +14,8 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 
@@ -27,13 +27,13 @@ import com.alibaba.fastjson.JSON;
  */
 public class DefaultCodeRepository implements CodeRepository {
 
-	public static final Log log = LogFactory.getLog(DefaultCodeRepository.class);
+	private static Logger log = LoggerFactory.getLogger(DefaultCodeRepository.class);
 
 	private Map<String, CodeMetadata> codes = new HashMap<>(24);
 	MultiKeyMap<String, String> localeBasedMessages = new MultiKeyMap<>();
 
 	private String prefix;
-	private String localeName = Locale.getDefault().getDisplayName();
+	private Locale effectLocale = Locale.getDefault();
 
 	public DefaultCodeRepository() {
 		log.info("Start initialize code reposiroty");
@@ -52,13 +52,11 @@ public class DefaultCodeRepository implements CodeRepository {
 					if (!StringUtils.isBlank(currentLocaleName)) {
 						InputStream resourceAsStream = DefaultCodeRepository.class.getClassLoader()
 								.getResourceAsStream("code_description_" + currentLocaleName + ".txt");
-						if(resourceAsStream != null) {
-							IOUtils.readLines(resourceAsStream, UTF8)
-							.forEach(t -> {
+						if (resourceAsStream != null) {
+							IOUtils.readLines(resourceAsStream, UTF8).forEach(t -> {
 								String[] segments = t.split("=");
 								if (segments.length == 2) {
-									localeBasedMessages.put(this.prefix + segments[0], currentLocaleName,
-											segments[1]);
+									localeBasedMessages.put(this.prefix + segments[0], currentLocaleName, segments[1]);
 								}
 							});
 						}
@@ -71,12 +69,12 @@ public class DefaultCodeRepository implements CodeRepository {
 				CodeMetadata cd = new CodeMetadata(key, codeList.get(key));
 				decorateCode(cd);
 				codes.put(cd.getCode(), cd);
-				log.info(cd);
+				log.info(cd.toString());
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Code Metadata initialize failed, please check and make sure things are ok.");
 		}
-		Validate.notBlank(localeName);
+		Validate.notNull(effectLocale, "Effect Locale can't be null. ");
 	}
 
 	public String getUnkonwErrorCode() {
@@ -106,26 +104,34 @@ public class DefaultCodeRepository implements CodeRepository {
 	}
 
 	public synchronized void setLocale(Locale locale) {
-		if (locale != null) {
-			this.localeName = locale.getDisplayName();
-		}
+		Validate.notNull(locale, "Locale can't be null");
+		this.effectLocale = locale;
 	}
 
-	public String getEffectLocaleName() {
-		return this.localeName;
+	public Locale getEffectLocale() {
+		return this.effectLocale;
 	}
 
 	public Collection<CodeMetadata> listAllCodes() {
 		return Collections.unmodifiableCollection(codes.values());
 	}
 
-	@Override
-	public String getLocaleMessage(CodeMetadata code, String localeName) {
+	private String getLocaleMessage(CodeMetadata code, String localeName) {
 		if (code == null) {
 			return "";
 		}
 		String localeMessage = localeBasedMessages.get(code.getCode(), localeName);
 		return StringUtils.isBlank(localeMessage) ? code.getSimpleName() : localeMessage;
+	}
+
+	@Override
+	public String getLocaleMessage(CodeMetadata code, Locale givenLocale) {
+		return getLocaleMessage(code, givenLocale.toString());
+	}
+
+	@Override
+	public String getLocaleMessage(CodeMetadata code) {
+		return getLocaleMessage(code, this.getEffectLocale().toString());
 	}
 
 }

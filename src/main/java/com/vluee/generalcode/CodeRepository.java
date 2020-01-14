@@ -21,9 +21,11 @@ public interface CodeRepository {
 
 	public void setLocale(Locale locale);
 
-	public String getEffectLocaleName();
+	public Locale getEffectLocale();
 
 	public Collection<CodeMetadata> listAllCodes();
 
-	public String getLocaleMessage(CodeMetadata code, String localeName);
+	public String getLocaleMessage(CodeMetadata code, Locale givenLocale);
+
+	public String getLocaleMessage(CodeMetadata code);
 }
