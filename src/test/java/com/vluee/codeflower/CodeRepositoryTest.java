@@ -1,4 +1,4 @@
-package com.vluee.generalcode;
+package com.vluee.codeflower;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,13 +8,23 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.vluee.codeflower.CodeMetadata;
+import com.vluee.codeflower.CodeRepository;
+import com.vluee.codeflower.DefaultCodeRepository;
 
 @DisplayName("Test for Code Repository default behaivor")
 class CodeRepositoryTest {
 
-	private CodeRepository repository = new DefaultCodeRepository();
+	private static CodeRepository repository;
+
+	@BeforeAll
+	public static void setup() {
+		repository = new DefaultCodeRepository();
+	}
 
 	@Test
 	void verifyGetCodeWithSuffix() {

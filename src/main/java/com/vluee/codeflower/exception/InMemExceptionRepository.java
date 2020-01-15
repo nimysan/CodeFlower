@@ -1,4 +1,4 @@
-package com.vluee.generalcode.exception;
+package com.vluee.codeflower.exception;
 
 import java.util.UUID;
 
@@ -9,6 +9,8 @@ import com.google.common.cache.CacheBuilder;
 
 /**
  * 
+ * 使用Guava Cache实现异常保存，最大保存1000条。
+ * 
  * @author SeanYe
  *
  */
@@ -18,11 +20,6 @@ public final class InMemExceptionRepository implements ExceptionRepository {
 
 	@Override
 	public String record(Exception exception) {
-
-		if (exception == null) {
-			return "";
-		}
-
 		String id = this.generateId();
 		exceptionCache.put(id, ExceptionUtils.getStackFrames(exception));
 		return id;

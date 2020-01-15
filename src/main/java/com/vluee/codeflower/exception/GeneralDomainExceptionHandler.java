@@ -1,6 +1,6 @@
-package com.vluee.generalcode.exception;
+package com.vluee.codeflower.exception;
 
-import static com.vluee.generalcode.GeneralCodeConstants.RETURN_CODE_LABEL;
+import static com.vluee.codeflower.GeneralCodeConstants.RETURN_CODE_LABEL;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +10,9 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vluee.generalcode.CodeRepository;
-import com.vluee.generalcode.GeneralCodeConstants;
+import com.google.common.collect.ImmutableMap;
+import com.vluee.codeflower.CodeRepository;
+import com.vluee.codeflower.GeneralCodeConstants;
 
 /**
  * 
@@ -40,6 +41,9 @@ public class GeneralDomainExceptionHandler {
 	 * @return
 	 */
 	public Map<String, String> extract(Exception exception) {
+		if (exception == null) {
+			return ImmutableMap.of();
+		}
 		String traceId = exceptionRepository.record(exception);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Exception [%s]", traceId == null ? "" : traceId), exception);

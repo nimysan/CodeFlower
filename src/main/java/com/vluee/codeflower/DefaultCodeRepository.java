@@ -1,7 +1,7 @@
-package com.vluee.generalcode;
+package com.vluee.codeflower;
 
-import static com.vluee.generalcode.GeneralCodeConstants.DEFAULT_PREFIX;
-import static com.vluee.generalcode.GeneralCodeConstants.UNDEFINED_CODE_REPLACEMENT;
+import static com.vluee.codeflower.GeneralCodeConstants.DEFAULT_PREFIX;
+import static com.vluee.codeflower.GeneralCodeConstants.UNDEFINED_CODE_REPLACEMENT;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +17,7 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class DefaultCodeRepository implements CodeRepository {
 	private Locale effectLocale = Locale.getDefault();
 
 	public DefaultCodeRepository() {
-		log.info("Start initialize code reposiroty");
+		log.info("Start initializing code reposiroty");
 		this.prefix = DEFAULT_PREFIX;
 		try {
 			InputStream codeInputStream = DefaultCodeRepository.class.getClassLoader()
@@ -65,14 +66,15 @@ public class DefaultCodeRepository implements CodeRepository {
 						}
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					throw new ContextedRuntimeException(
+							"CodeReposiroty initialize failed due to the required resource not exist or invalid.", e);
 				}
 			});
 			for (String key : codeList.keySet()) {
 				CodeMetadata cd = new CodeMetadata(key, codeList.get(key));
 				decorateCode(cd);
 				codes.put(cd.getCode(), cd);
-				log.info(cd.toString());
+				// log.info(cd.toString());
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Code Metadata initialize failed, please check and make sure things are ok.");

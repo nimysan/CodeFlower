@@ -1,4 +1,4 @@
-package com.vluee.generalcode.exception;
+package com.vluee.codeflower.exception;
 
 @FunctionalInterface
 public interface CodeMessageConverter {

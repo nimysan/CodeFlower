@@ -1,4 +1,4 @@
-package com.vluee.generalcode.exception;
+package com.vluee.codeflower.exception;
 
 /**
  * 标识一个领域异常

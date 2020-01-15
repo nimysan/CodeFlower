@@ -1,4 +1,4 @@
-package com.vluee.generalcode.exception;
+package com.vluee.codeflower.exception;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,11 +13,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.vluee.generalcode.DefaultCodeRepository;
-import com.vluee.generalcode.GeneralCodeConstants;
+import com.vluee.codeflower.DefaultCodeRepository;
+import com.vluee.codeflower.GeneralCodeConstants;
+import com.vluee.codeflower.exception.GeneralDomainException;
+import com.vluee.codeflower.exception.GeneralDomainExceptionHandler;
+import com.vluee.codeflower.exception.InMemExceptionRepository;
 
 class GeneralDomainExceptionTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GeneralDomainExceptionTest.class);
 
 	private static TestController controllerStub;
 	private static GeneralDomainExceptionHandler handler;
@@ -74,13 +81,14 @@ class GeneralDomainExceptionTest {
 	@Test
 	@DisplayName("Test exception record and trace")
 	void testHandleGivenGeneralDomainException() {
-		String originExceptionMessage = "Failed to connect email service: 10.23.42.34";
+		String originExceptionMessage = "Failed to connect email service: 10.23.42.34.（模拟的跟真的一样）";
 		try {
 			GeneralDomainException sendEmailNetworkError = new GeneralDomainException("SA3000",
 					new ConnectException(originExceptionMessage));
 			controllerStub.callServiceWithGivenGeneralDomainException(sendEmailNetworkError);
 		} catch (Exception e) {
 			Map<String, String> extract = handler.extract(e);
+			LOGGER.debug("Display:" + extract);
 			assertEquals(extract.get("returnCode"), "SA3000");
 			String exceptionId = extract.get(GeneralCodeConstants.RETURN_EXCEPTION_LABEL);
 			assertNotNull(exceptionId);

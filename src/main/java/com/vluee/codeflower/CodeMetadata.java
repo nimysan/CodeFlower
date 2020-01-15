@@ -1,4 +1,4 @@
-package com.vluee.generalcode;
+package com.vluee.codeflower;
 
 public class CodeMetadata {
 	private String code;
