@@ -1,6 +1,5 @@
 package com.vluee.codeflower;
 
-import static com.vluee.codeflower.GeneralCodeConstants.DEFAULT_PREFIX;
 import static com.vluee.codeflower.GeneralCodeConstants.UNDEFINED_CODE_REPLACEMENT;
 
 import java.io.IOException;
@@ -24,12 +23,10 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 
 /**
- * 
- * 
  * @author SeanYe
  *
  */
-public class DefaultCodeRepository implements CodeRepository {
+public class DefaultCodeRepository implements CodeMessageReposiroty {
 
 	private static Logger log = LoggerFactory.getLogger(DefaultCodeRepository.class);
 
@@ -39,9 +36,10 @@ public class DefaultCodeRepository implements CodeRepository {
 	private String prefix;
 	private Locale effectLocale = Locale.getDefault();
 
-	public DefaultCodeRepository() {
+	protected DefaultCodeRepository(Locale contextLocale, String prefix) {
 		log.info("Start initializing code reposiroty");
-		this.prefix = DEFAULT_PREFIX;
+		this.prefix = prefix;
+
 		try {
 			InputStream codeInputStream = DefaultCodeRepository.class.getClassLoader()
 					.getResourceAsStream("vluee_code_default.json");

@@ -1,6 +1,9 @@
 package com.vluee.codeflower.exception;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.ConnectException;
 import java.util.Map;
@@ -16,11 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vluee.codeflower.DefaultCodeRepository;
+import com.vluee.codeflower.CodeRepositoryBuilder;
 import com.vluee.codeflower.GeneralCodeConstants;
-import com.vluee.codeflower.exception.GeneralDomainException;
-import com.vluee.codeflower.exception.GeneralDomainExceptionHandler;
-import com.vluee.codeflower.exception.InMemExceptionRepository;
 
 class GeneralDomainExceptionTest {
 
@@ -32,7 +32,8 @@ class GeneralDomainExceptionTest {
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		controllerStub = new TestController();
-		handler = new GeneralDomainExceptionHandler(new DefaultCodeRepository(), new InMemExceptionRepository());
+		handler = new GeneralDomainExceptionHandler(CodeRepositoryBuilder.newBuilder().build(),
+				new InMemExceptionRepository());
 	}
 
 	@AfterAll
@@ -48,11 +49,21 @@ class GeneralDomainExceptionTest {
 	}
 
 	@Test
-	void testGetCodeMessage() {
+	void testHandlerNormalException() {
 		try {
 			controllerStub.callServiceWithException();
 		} catch (Exception e) {
-			Map<String, String> extract = handler.extract(e);
+			Map<String, String> extract = handler.handle(e);
+			assertEquals(extract.get(GeneralCodeConstants.RETURN_CODE_LABEL), "SA11111");
+		}
+	}
+
+	@Test
+	void testGetReturnInformationWithCode() {
+		try {
+			controllerStub.callServiceWithException();
+		} catch (Exception e) {
+			Map<String, String> extract = handler.handle(e);
 			assertEquals(extract.get("returnCode"), "SA11111");
 		}
 	}
@@ -73,8 +84,8 @@ class GeneralDomainExceptionTest {
 		try {
 			controllerStub.callServiceWithGeneralDomainException();
 		} catch (Exception e) {
-			Map<String, String> extract = handler.extract(e);
-			assertEquals(extract.get("returnCode"), "SA1000");
+			Map<String, String> extract = handler.handle(e);
+			assertEquals(extract.get(GeneralCodeConstants.RETURN_CODE_LABEL), "SA1000");
 		}
 	}
 
@@ -87,14 +98,12 @@ class GeneralDomainExceptionTest {
 					new ConnectException(originExceptionMessage));
 			controllerStub.callServiceWithGivenGeneralDomainException(sendEmailNetworkError);
 		} catch (Exception e) {
-			Map<String, String> extract = handler.extract(e);
+			Map<String, String> extract = handler.handle(e);
 			LOGGER.debug("Display:" + extract);
 			assertEquals(extract.get("returnCode"), "SA3000");
 			String exceptionId = extract.get(GeneralCodeConstants.RETURN_EXCEPTION_LABEL);
 			assertNotNull(exceptionId);
 			assertTrue(handler.getExceptionDetail(exceptionId).contains(originExceptionMessage));
-			// assertEquals("外部系统调用错误",
-			// extract.get(GeneralCodeConstants.RETURN_MESSAGE_LABEL));
 		}
 	}
 

@@ -12,14 +12,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Test for Code Repository With EN_US locale")
-class CodeRepositoryTest {
+@DisplayName("Test for Code Repository default behaivor")
+class CodeRepositoryWithEnUSLocaleTest {
 
 	private static CodeMessageReposiroty repository;
 
 	@BeforeAll
 	public static void setup() {
-		repository = CodeRepositoryBuilder.newBuilder().build();
+		repository = CodeRepositoryBuilder.newBuilder().setLocale(Locale.forLanguageTag("en_US")).build();
 	}
 
 	@Test

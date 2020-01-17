@@ -1,6 +1,5 @@
 package com.vluee.codeflower;
 
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -10,7 +9,7 @@ import java.util.Optional;
  * @author SeanYe
  *
  */
-public interface CodeRepository {
+public interface CodeMessageReposiroty {
 
 
 	public Optional<CodeMetadata> getCode(String string);
