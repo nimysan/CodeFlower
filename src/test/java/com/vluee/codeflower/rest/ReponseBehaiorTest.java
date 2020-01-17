@@ -75,6 +75,22 @@ public class ReponseBehaiorTest {
 	}
 
 	@Test
+	void testFailOutputWithExceptionDetail() {
+		int b = 0;
+		int a = 20;
+		try {
+			if (a / b > 0) {
+			}
+		} catch (Exception e) {
+			builder.setAppendExceptionStackTrace(true);
+			GeneralRestResponse<Void> rest = builder.codeResponse("1234", e);
+			LOGGER.info(JSON.toJSONString(rest, true));
+			assertThat(rest.getExceptionId()).isNotNull();
+			builder.setAppendExceptionStackTrace(false);
+		}
+	}
+
+	@Test
 	@DisplayName("case-fail-with-exception")
 	void testFailCaseWithException() {
 		GeneralRestResponse<Void> rest = builder.codeResponse("11111",
