@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.vluee</groupId>
 	<artifactId>generalcode</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.4</version>
 	<name>com.vluee.codeflower</name>
 	<description>Transalte Code to Message</description>
 	<properties>
