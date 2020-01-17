@@ -17,11 +17,11 @@ public class ReponseBehaiorTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReponseBehaiorTest.class);
 
-	private static GeneralResponseBuilder builder = null;
+	private static GeneralRestResponseBuilder builder = null;
 
 	@BeforeAll
 	public static void setup() {
-		builder = new GeneralResponseBuilder();
+		builder = new GeneralRestResponseBuilder();
 	}
 
 	@Test

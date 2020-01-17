@@ -14,8 +14,7 @@ import com.vluee.codeflower.exception.InMemExceptionRepository;
  * @author SeanYe
  *
  */
-public class GeneralResponseBuilder {
-	
+public class GeneralRestResponseBuilder {
 
 	private boolean appendExceptionSimpleMesssage = true;
 
@@ -28,11 +27,11 @@ public class GeneralResponseBuilder {
 	 */
 	private ExceptionRepository exceptionRepository = new InMemExceptionRepository();
 
-	public GeneralResponseBuilder() {
+	public GeneralRestResponseBuilder() {
 		this(null);
 	}
 
-	public GeneralResponseBuilder(ExceptionRepository exceptionRepository) {
+	public GeneralRestResponseBuilder(ExceptionRepository exceptionRepository) {
 		if (exceptionRepository != null) {
 			this.exceptionRepository = exceptionRepository;
 		}
