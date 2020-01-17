@@ -15,7 +15,7 @@ public interface ExceptionRepository {
 	 * @param exception
 	 * @return
 	 */
-	public String record(Exception exception);
+	public String store(Throwable exception);
 
 	/**
 	 * 根据traceId获取异常详情

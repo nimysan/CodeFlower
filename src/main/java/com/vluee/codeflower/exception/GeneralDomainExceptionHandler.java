@@ -50,7 +50,7 @@ public class GeneralDomainExceptionHandler {
 		if (exception == null) {
 			return ImmutableMap.of();
 		}
-		String traceId = exceptionRepository.record(exception);
+		String traceId = exceptionRepository.store(exception);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Exception [%s]", traceId == null ? "" : traceId), exception);
 		}

@@ -49,6 +49,15 @@ class GeneralDomainExceptionTest {
 	}
 
 	@Test
+	void testHandleExceptionNull() {
+		Map<String, String> handle = handler.handle(null);
+		assertEquals(0, handle.size());
+		
+		InMemExceptionRepository inMem = new InMemExceptionRepository();
+		assertNull(inMem.getException(null));
+	}
+
+	@Test
 	void testHandlerNormalException() {
 		try {
 			controllerStub.callServiceWithException();
@@ -67,6 +76,7 @@ class GeneralDomainExceptionTest {
 			assertEquals(extract.get("returnCode"), "SA11111");
 		}
 	}
+	
 
 	@Test
 	void testEmptyExceptionIdShouldGetNull() {

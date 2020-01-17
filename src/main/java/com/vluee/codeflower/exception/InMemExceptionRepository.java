@@ -19,7 +19,7 @@ public final class InMemExceptionRepository implements ExceptionRepository {
 	private final Cache<String, String[]> exceptionCache = CacheBuilder.newBuilder().maximumSize(1000).build();
 
 	@Override
-	public String record(Exception exception) {
+	public String store(Throwable exception) {
 		String id = this.generateId();
 		exceptionCache.put(id, ExceptionUtils.getStackFrames(exception));
 		return id;
@@ -32,7 +32,7 @@ public final class InMemExceptionRepository implements ExceptionRepository {
 		if (ifPresent != null && ifPresent.length > 0) {
 			return String.join(System.lineSeparator(), ifPresent);
 		}
-		return "Exception information does not exist or expired";
+		return null;
 	}
 
 	private String generateId() {
