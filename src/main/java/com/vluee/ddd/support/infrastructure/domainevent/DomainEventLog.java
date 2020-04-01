@@ -25,12 +25,13 @@ public class DomainEventLog extends BaseAggregateRoot {
 	}
 
 	public DomainEventLog(AggregateId id, AggregateId createdBy, String eventName, String aggregateRootName,
-			AggregateId refAggregateId) {
+			AggregateId refAggregateId, String payload) {
 		this.aggregateId = id;
 		this.eventName = eventName;
 		this.aggregateRootName = aggregateRootName;
 		this.refAggregateId = refAggregateId;
 		this.createdBy = createdBy;
+		this.payload = payload;
 	}
 
 	@Column(nullable = false)
@@ -39,8 +40,7 @@ public class DomainEventLog extends BaseAggregateRoot {
 	@CreatedDate
 	private Date createdAt;
 
-	@AttributeOverrides({
-			@AttributeOverride(name = "aggregateId", column = @Column(name = "created_by", nullable = false)) })
+	@AttributeOverrides({ @AttributeOverride(name = "aggregateId", column = @Column(name = "created_by")) })
 	private AggregateId createdBy;
 
 	@Column(nullable = false)
@@ -49,5 +49,8 @@ public class DomainEventLog extends BaseAggregateRoot {
 	@AttributeOverrides({
 			@AttributeOverride(name = "aggregateId", column = @Column(name = "ref_id", nullable = false)) })
 	private AggregateId refAggregateId;
+
+	@Column
+	private String payload;
 
 }

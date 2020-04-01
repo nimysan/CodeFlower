@@ -22,8 +22,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class SimpleEventPublisher implements DomainEventPublisher {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEventPublisher.class);
 
 	public static SimpleEventPublisher INSTANCE;
 	private Set<EventHandler> eventHandlers = new HashSet<EventHandler>();
@@ -60,9 +56,9 @@ public class SimpleEventPublisher implements DomainEventPublisher {
 		if (domainEventLogRepository != null) {
 			if (event instanceof DomainEvent) {
 				DomainEvent domainEvent = ((DomainEvent) event);
-				domainEventLogRepository
-						.save(new DomainEventLog(AggregateId.generate(), null, domainEvent.getClass().getName(),
-								domainEvent.getDomainClass().getName(), domainEvent.getDomainId()));
+				domainEventLogRepository.save(new DomainEventLog(AggregateId.generate(), domainEvent.getOperatorId(),
+						domainEvent.getClass().getName(), domainEvent.getDomainClass().getName(),
+						domainEvent.getDomainId(), domainEvent.getPayload()));
 			}
 		}
 	}
@@ -73,7 +69,7 @@ public class SimpleEventPublisher implements DomainEventPublisher {
 				try {
 					handler.handle(event);
 				} catch (Exception e) {
-					LOGGER.error("event handling error", e);
+					log.error("event handling error", e);
 				}
 			}
 		}

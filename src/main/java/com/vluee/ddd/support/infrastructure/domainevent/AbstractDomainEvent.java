@@ -14,10 +14,18 @@ public abstract class AbstractDomainEvent implements DomainEvent {
 	@Getter
 	private AggregateId domainId;
 
-	public AbstractDomainEvent(Class<?> domainClass, AggregateId domainId) {
+	@Getter
+	private AggregateId operatorId;
+
+	@Getter
+	private String payload;
+
+	public AbstractDomainEvent(Class<?> domainClass, AggregateId domainId, AggregateId operator, String payload) {
 		super();
 		this.domainClass = domainClass;
 		this.domainId = domainId;
+		this.operatorId = operator;
+		this.payload = payload;
 	}
 
 }

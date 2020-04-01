@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 
 import com.vluee.ddd.support.infrastructure.domainevent.DomainEventLogRepository;
 import com.vluee.ddd.support.infrastructure.domainevent.SimpleEventPublisher;
+import com.vluee.ddd.support.infrastructure.domainevent.impl.EventListenerBeanPostProcessor;
 
 /**
  * 
@@ -18,7 +19,7 @@ import com.vluee.ddd.support.infrastructure.domainevent.SimpleEventPublisher;
  *
  */
 @Configuration
-@Import({ SimpleEventPublisher.class })
+@Import({ SimpleEventPublisher.class, EventListenerBeanPostProcessor.class })
 public class SimpleDomainEventConfiguration {
 
 	@Inject
