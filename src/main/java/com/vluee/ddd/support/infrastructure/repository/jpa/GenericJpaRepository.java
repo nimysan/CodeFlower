@@ -31,48 +31,47 @@ import com.vluee.ddd.support.domain.BaseAggregateRoot;
 
 public abstract class GenericJpaRepository<A extends BaseAggregateRoot> {
 
-    @PersistenceContext
-    protected EntityManager entityManager;
+	@PersistenceContext
+	protected EntityManager entityManager;
 
-    private Class<A> clazz;
-    
-    @Inject
-    private AutowireCapableBeanFactory spring;
+	private Class<A> clazz;
 
-    @SuppressWarnings("unchecked")
-    public GenericJpaRepository() {
-        this.clazz = ((Class<A>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
-    }
+	@Inject
+	private AutowireCapableBeanFactory spring;
 
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public A load(AggregateId id) {
-    	//lock to be sure when creating other objects based on values of this aggregate
-        A aggregate = entityManager.find(clazz, id, LockModeType.OPTIMISTIC);
-        
-        if (aggregate == null)
-        	throw new RuntimeException("Aggregate " + clazz.getCanonicalName() + " id = " + id + " does not exist");
-        
-        if (aggregate.isRemoved())
-        	throw new RuntimeException("Aggragate + " + id + " is removed.");
-        
-        spring.autowireBean(aggregate);
-        
-        return aggregate;
-    }
+	@SuppressWarnings("unchecked")
+	public GenericJpaRepository() {
+		this.clazz = ((Class<A>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
+	}
 
-    public void save(A aggregate) {
-    	if (entityManager.contains(aggregate)){
-    		//locking Aggregate Root logically protects whole aggregate
-    		entityManager.lock(aggregate, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-    	}
-    	else{
-    	    entityManager.persist(aggregate);
-    	}
-    }
-    
-    public void delete(AggregateId id){
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public A load(AggregateId id) {
+		// lock to be sure when creating other objects based on values of this aggregate
+		A aggregate = entityManager.find(clazz, id, LockModeType.OPTIMISTIC);
+
+		if (aggregate == null)
+			throw new RuntimeException("Aggregate " + clazz.getCanonicalName() + " id = " + id + " does not exist");
+
+		if (aggregate.isRemoved())
+			throw new RuntimeException("Aggragate + " + id + " is removed.");
+
+		spring.autowireBean(aggregate);
+
+		return aggregate;
+	}
+
+	public void save(A aggregate) {
+		if (entityManager.contains(aggregate)) {
+			// locking Aggregate Root logically protects whole aggregate
+			entityManager.lock(aggregate, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+		} else {
+			entityManager.persist(aggregate);
+		}
+	}
+
+	public void delete(AggregateId id) {
 		A entity = load(id);
-		//just flag
-		entity.markAsRemoved();					
+		entity.markAsRemoved();
+		entityManager.persist(entity);
 	}
 }

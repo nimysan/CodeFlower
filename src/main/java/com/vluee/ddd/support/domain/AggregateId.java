@@ -24,7 +24,7 @@ import org.apache.commons.lang3.Validate;
 
 @SuppressWarnings("serial")
 @Embeddable
-public class AggregateId implements Serializable{
+public class AggregateId implements Serializable {
 
 	private String aggregateId;
 
@@ -35,9 +35,10 @@ public class AggregateId implements Serializable{
 
 	protected AggregateId() {
 	}
-	
-	public static AggregateId generate(){
-		return new AggregateId(UUID.randomUUID().toString());
+
+	public static AggregateId generate() {
+		String string = UUID.randomUUID().toString();
+		return new AggregateId(string);
 	}
 
 	public String getId() {
